@@ -1,9 +1,10 @@
 import { queryFetcher } from '../api/queryFetcher';
 
 export const adminService = {
-    createProduct: async (formData, token) => {
+    createProduct: async (formData) => {
         // FormData з файлами потрібно відправляти через звичайний fetch
-        console.log('Creating product with token:', token);
+        const token = localStorage.getItem('accessToken');
+        console.log('Creating product with token');
         console.log('Sending to: https://sportmarketback.onrender.com/products');
         
         const res = await fetch('https://sportmarketback.onrender.com/products', {
@@ -42,38 +43,29 @@ export const adminService = {
     },
 
     // Users Management
-    getUsers: async (token) => {
+    getUsers: async () => {
         const res = await queryFetcher({ 
             queryKey: ['/users/', { 
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                method: 'GET'
             }] 
         });
         return res;
     },
 
-    banUser: async (userId, token) => {
+    banUser: async (userId) => {
         const res = await queryFetcher({ 
             queryKey: [`/users/ban`, { 
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 body: JSON.stringify({ id: userId }),
             }] 
         });
         return res;
     },
 
-    unbanUser: async (userId, token) => {
+    unbanUser: async (userId) => {
         const res = await queryFetcher({ 
             queryKey: [`/users/ban`, { 
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 body: JSON.stringify({ id: userId }),
             }] 
         });
@@ -81,25 +73,19 @@ export const adminService = {
     },
 
     // Orders Management
-    getAllOrders: async (token) => {
+    getAllOrders: async () => {
         const res = await queryFetcher({ 
             queryKey: ['/orders/all', { 
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                method: 'GET'
             }] 
         });
         return res;
     },
 
-    updateOrderStatus: async (orderId, status, token) => {
+    updateOrderStatus: async (orderId, status) => {
         const res = await queryFetcher({ 
             queryKey: [`/orders/${orderId}/status`, { 
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 body: JSON.stringify({ status }),
             }] 
         });
@@ -107,32 +93,27 @@ export const adminService = {
     },
 
     // Products Management
-    getProducts: async (token) => {
+    getProducts: async () => {
         const res = await queryFetcher({ 
             queryKey: ['/products', { 
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                method: 'GET'
             }] 
         });
         return res;
     },
 
-    toggleProductEnabled: async (productId, enabled, token) => {
+    toggleProductEnabled: async (productId, enabled) => {
         const res = await queryFetcher({ 
             queryKey: [`/admin/products/${productId}/toggle`, { 
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 body: JSON.stringify({ enabled }),
             }] 
         });
         return res;
     },
 
-    updateProduct: async (productId, formData, token) => {
+    updateProduct: async (productId, formData) => {
+        const token = localStorage.getItem('accessToken');
         const res = await fetch(`https://sportmarketback.onrender.com/products/${productId}`, {
             method: 'PUT',
             body: formData,
@@ -149,13 +130,10 @@ export const adminService = {
         return res.json();
     },
 
-    deleteProduct: async (productId, token) => {
+    deleteProduct: async (productId) => {
         const res = await queryFetcher({ 
             queryKey: [`/admin/products/${productId}`, { 
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                method: 'DELETE'
             }] 
         });
         return res;

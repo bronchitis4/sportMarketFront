@@ -224,7 +224,7 @@ export default function AdminPage() {
 
     const loadProducts = async () => {
         try {
-            const productsData = await adminService.getProducts(accessToken);
+            const productsData = await adminService.getProducts();
             setProducts(productsData || []);
         } catch (err) {
             console.error('Error loading products:', err);
@@ -234,7 +234,7 @@ export default function AdminPage() {
 
     const loadUsers = async () => {
         try {
-            const usersData = await adminService.getUsers(accessToken);
+            const usersData = await adminService.getUsers();
             console.log('Users data:', usersData);
             console.table(usersData);
             setUsers(usersData || []);
@@ -246,7 +246,7 @@ export default function AdminPage() {
 
     const loadOrders = async () => {
         try {
-            const ordersData = await adminService.getAllOrders(accessToken);
+            const ordersData = await adminService.getAllOrders();
             console.log('Orders data:', ordersData);
             console.table(ordersData);
             setOrders(ordersData || []);
@@ -343,7 +343,7 @@ export default function AdminPage() {
                 image_urls: formData.images.filter(url => url.trim() !== ''),
             };
 
-            const result = await adminService.createProduct(productData, accessToken);
+            const result = await adminService.createProduct(productData);
             console.log('Product created:', result);
 
             setMessage('Товар успішно додано!');
@@ -378,7 +378,7 @@ export default function AdminPage() {
             setIsLoading(true);
             setError('');
             console.log(`Sending ban request for user ${userId}`);
-            await adminService.banUser(userId, accessToken);
+            await adminService.banUser(userId);
             
             setMessage(`Користувач успішно ${currentActiveStatus ? 'заблокований' : 'розблокований'}!`);
             await loadUsers();
@@ -396,7 +396,7 @@ export default function AdminPage() {
         try {
             setIsLoading(true);
             setError('');
-            await adminService.updateOrderStatus(orderId, newStatus, accessToken);
+            await adminService.updateOrderStatus(orderId, newStatus);
             
             setMessage('Статус замовлення успішно оновлено!');
             await loadOrders();
@@ -418,7 +418,7 @@ export default function AdminPage() {
         try {
             setIsLoading(true);
             setError('');
-            await adminService.deleteProduct(productId, accessToken);
+            await adminService.deleteProduct(productId);
             
             setMessage('Товар успішно видалено!');
             await loadProducts();
@@ -435,7 +435,7 @@ export default function AdminPage() {
         try {
             setIsLoading(true);
             setError('');
-            await adminService.toggleProductEnabled(productId, !currentState, accessToken);
+            await adminService.toggleProductEnabled(productId, !currentState);
             
             setMessage(`Товар успішно ${!currentState ? 'активовано' : 'деактивовано'}!`);
             await loadProducts();

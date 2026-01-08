@@ -45,12 +45,12 @@ const LoginForm = () => {
         try {
             const result = await queryFetcher({ queryKey });
             
-            localStorage.setItem('accessToken', result.acessToken);
+            localStorage.setItem('accessToken', result.accessToken);
             localStorage.setItem('refreshToken', result.refreshToken);
             localStorage.setItem('role', result.role);
 
             dispatch(setCredentials({ 
-                accessToken: result.acessToken,
+                accessToken: result.accessToken,
                 refreshToken: result.refreshToken,
                 role: result.role
             }));
