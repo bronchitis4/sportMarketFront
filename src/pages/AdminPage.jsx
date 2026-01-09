@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MdInventory2, MdPeople, MdShoppingCart, MdLogout, MdExpandMore, MdExpandLess } from 'react-icons/md';
 
-// Компонент для групованого дропдауна замовлень по магазинам
 function OrderStoreDropdown({ storeName, storeAddress, storeCity, orders, onStatusChange, isLoading }) {
     const [isOpen, setIsOpen] = useState(false);
     const [expandedOrderId, setExpandedOrderId] = useState(null);
@@ -208,7 +207,6 @@ export default function AdminPage() {
             setCategories(categoriesData || []);
             setBrands(brandsData || []);
 
-            // Завантажуємо додаткові дані залежно від активного табу
             if (activeTab === 'products') {
                 await loadProducts();
             } else if (activeTab === 'users') {
@@ -845,7 +843,6 @@ export default function AdminPage() {
                     ) : (
                         <div className="space-y-4">
                             {(() => {
-                                // Групуємо замовлення по магазинам
                                 const groupedByStore = {};
                                 orders.forEach(order => {
                                     const storeName = order.shippingInfos?.store?.name || 'Без магазину';

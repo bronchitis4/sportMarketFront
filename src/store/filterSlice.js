@@ -1,10 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// Для використання fetch (як ви просили)
-// import axios from 'axios'; // Не використовуємо
 
-// =========================================================
-// 1. АСИНХРОННИЙ THUNK: Завантаження категорій (залишається без змін)
-// =========================================================
 export const fetchCategories = createAsyncThunk(
   'filters/fetchCategories',
   async (_, { rejectWithValue }) => {
@@ -23,9 +18,6 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
-// =========================================================
-// 2. АСИНХРОННИЙ THUNK: Завантаження брендів з бази
-// =========================================================
 export const fetchBrands = createAsyncThunk(
   'filters/fetchBrands',
   async (_, { rejectWithValue }) => {
@@ -65,30 +57,24 @@ const filterSlice = createSlice({
   name: 'filters',
   initialState,
   reducers: {
-    // 💡 ЗМІНЕНО: Редюсер тепер перемикає ID в масиві (логіка схожа на toggleBrandFilter)
     setCategoryFilter: (state, action) => {
       const categoryId = action.payload;
       const index = state.activeFilters.category_ids.indexOf(categoryId);
 
       if (index > -1) {
-        // ID знайдено: видаляємо його (скидаємо фільтр)
         state.activeFilters.category_ids.splice(index, 1);
       } else {
-        // ID не знайдено: додаємо його (активуємо фільтр)
         state.activeFilters.category_ids.push(categoryId);
       }
     },
     
-    // Новий редюсер: встановити категорію та очистити всі інші
     setCategoryFilterExclusive: (state, action) => {
       const categoryId = action.payload;
       const index = state.activeFilters.category_ids.indexOf(categoryId);
 
       if (index > -1) {
-        // Якщо вже активна — видаляємо
         state.activeFilters.category_ids.splice(index, 1);
       } else {
-        // Якщо не активна — очищуємо все й додаємо тільки цю
         state.activeFilters.category_ids = [categoryId];
       }
     },
@@ -104,7 +90,6 @@ const filterSlice = createSlice({
       }
     },
     
-    // 💡 ЗМІНЕНО: Скидаємо category_ids до порожнього масиву
     resetAllFilters: (state) => {
       state.activeFilters.category_ids = []; 
       state.activeFilters.brand_ids = [];
@@ -128,9 +113,6 @@ const filterSlice = createSlice({
     }
   },
   
-  // =========================================================
-  // 2. EXTRA REDUCERS: Обробка результатів Thunk
-  // =========================================================
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state) => {
@@ -146,7 +128,6 @@ const filterSlice = createSlice({
         console.error("Помилка завантаження категорій:", action.payload);
       })
       .addCase(fetchBrands.pending, (state) => {
-        // Не змінюємо основний status, щоб не блокувати категорії
       })
       .addCase(fetchBrands.fulfilled, (state, action) => {
         state.availableFilters.brands = action.payload; 

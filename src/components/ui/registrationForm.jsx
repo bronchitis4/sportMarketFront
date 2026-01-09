@@ -49,13 +49,9 @@ const RegistrationBlock = () => {
         try {
             const result = await queryFetcher({ queryKey });
             
-            // refreshToken автоматично в cookie, не приходить у відповіді
-            // При registration приходить тільки acessToken, без role
-            localStorage.setItem('accessToken', result.acessToken);
-            
             dispatch(setCredentials({ 
-                accessToken: result.acessToken,
-                role: 'USER' // За замовчуванням USER після реєстрації
+                accessToken: result.accessToken,
+                role: result.role || 'USER'
             }));
 
             setSuccess(true);
@@ -66,7 +62,7 @@ const RegistrationBlock = () => {
             
             setTimeout(() => {
                 navigate('/');
-            }, 1000);
+            }, 100);
         } catch (err) {
             console.error('Помилка реєстрації:', err);
             setError(err.message || 'Не вдалося зареєструватися. Спробуйте пізніше.');

@@ -34,7 +34,7 @@ function AppContent() {
   const dispatch = useDispatch();
   const filterStatus = useSelector(state => state.filter.status);
   
-  // Синхронізуємо auth з localStorage ОДРАЗУ при завантаженні
+  
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const role = localStorage.getItem('role');
@@ -48,7 +48,7 @@ function AppContent() {
     }
   }, [dispatch]);
   
-  // Завантажуємо категорії і бренди
+  
   useEffect(() => {
     if (filterStatus === 'idle') {
       dispatch(fetchCategories());
@@ -56,7 +56,7 @@ function AppContent() {
     }
   }, [dispatch, filterStatus]);
   
-  // Завантажуємо wish list і кошик для авторизованих
+  
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {

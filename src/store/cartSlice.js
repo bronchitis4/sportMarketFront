@@ -1,7 +1,6 @@
-// src/store/cartSlice.js
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { cartService } from '../services/cartService';
+import { logout } from './authSlice';
 
 // Async thunks
 export const fetchCart = createAsyncThunk('cart/fetchCart', async (_, { rejectWithValue }) => {
@@ -100,10 +99,8 @@ const cartSlice = createSlice({
             })
             .addCase(fetchCart.fulfilled, (state, action) => {
                 state.fetchStatus = 'succeeded';
-                // Сервер повертає масив картItems безпосередньо
                 const cartItems = Array.isArray(action.payload) ? action.payload : action.payload.items || [];
                 state.items = cartItems;
-                // Розраховуємо total_amount на основі товарів
                 state.total_amount = cartItems.reduce((sum, item) => {
                     return sum + (parseFloat(item.product?.price || 0) * item.quantity);
                 }, 0);
@@ -121,17 +118,14 @@ const cartSlice = createSlice({
             })
             .addCase(addToCart.fulfilled, (state, action) => {
                 state.actionStatus = 'succeeded';
-                // Після додавання сервер повертає масив всіх картItems або окремий об'єкт
                 const payload = action.payload;
                 if (Array.isArray(payload)) {
                     state.items = payload;
                 } else if (payload.items) {
                     state.items = payload.items;
                 } else {
-                    // Додаємо новий елемент до масиву
                     state.items.push(payload);
                 }
-                // Розраховуємо total_amount
                 state.total_amount = state.items.reduce((sum, item) => {
                     return sum + (parseFloat(item.product?.price || 0) * item.quantity);
                 }, 0);
@@ -155,7 +149,6 @@ const cartSlice = createSlice({
                 } else if (payload.items) {
                     state.items = payload.items;
                 }
-                // Розраховуємо total_amount
                 state.total_amount = state.items.reduce((sum, item) => {
                     return sum + (parseFloat(item.product?.price || 0) * item.quantity);
                 }, 0);
@@ -179,10 +172,8 @@ const cartSlice = createSlice({
                 } else if (payload.items) {
                     state.items = payload.items;
                 } else {
-                    // Видаляємо за ID з масиву
                     state.items = state.items.filter(item => item.id !== action.payload.cartItemId);
                 }
-                // Розраховуємо total_amount
                 state.total_amount = state.items.reduce((sum, item) => {
                     return sum + (parseFloat(item.product?.price || 0) * item.quantity);
                 }, 0);
@@ -206,6 +197,13 @@ const cartSlice = createSlice({
             .addCase(clearCart.rejected, (state, action) => {
                 state.actionStatus = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(logout, (state) => {
+                state.items = [];
+                state.total_amount = 0;
+                state.fetchStatus = 'idle';
+                state.actionStatus = 'idle';
+                state.error = null;
             });
     },
 });

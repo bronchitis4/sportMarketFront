@@ -6,11 +6,10 @@ export const refreshAccessToken = async () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include', // Відправляє cookies з refresh token
+        credentials: 'include',
     });
 
     if (!response.ok) {
-        // Якщо refresh токен невалідний, очищаємо localStorage
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('role');
@@ -19,7 +18,6 @@ export const refreshAccessToken = async () => {
 
     const data = await response.json();
     
-    // Сервер може повертати acessToken (з помилкою) замість accessToken
     const newAccessToken = data.acessToken || data.accessToken;
     const newRefreshToken = data.refreshToken;
     
@@ -39,7 +37,7 @@ export const logoutUser = async () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include', // Відправляє cookies з refresh token
+        credentials: 'include',
     });
 
     if (!response.ok) {

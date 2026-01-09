@@ -1,13 +1,9 @@
 // src/components/common/HierarchicalCategoryFilter.jsx
 import React, { useState, useEffect } from 'react';
-
-// Рекурсивний компонент для відображення одного рівня дерева
 const CategoryNode = ({ category, onFilterChange, onParentFilterChange, activeCategoryIds, level = 0 }) => {
-    // Визначаємо, чи категорія активна (присутня в масиві ID)
     const isActive = activeCategoryIds.includes(category.id);
     const paddingLeft = `${level * 1.0 + 0.5}rem`;
 
-    // Перевіряє, чи є активні нащадки (рекурсивно)
     const hasActiveDescendant = (node) => {
         if (!node.children || node.children.length === 0) return false;
         for (const ch of node.children) {
@@ -17,15 +13,12 @@ const CategoryNode = ({ category, onFilterChange, onParentFilterChange, activeCa
         return false;
     };
 
-    // Стан розгортання для вузла
     const [expanded, setExpanded] = useState(() => hasActiveDescendant(category));
 
-    // Якщо activeCategoryIds змінюється і з'явився активний нащадок — автовортапримити вузол
     useEffect(() => {
         if (hasActiveDescendant(category)) setExpanded(true);
     }, [activeCategoryIds]);
 
-    // Визуально вважаємо листові вузли (без children)
     const isLeaf = !category.children || category.children.length === 0;
 
     return (
@@ -38,7 +31,7 @@ const CategoryNode = ({ category, onFilterChange, onParentFilterChange, activeCa
                             }`}
                 style={{ paddingLeft: paddingLeft }}
             >
-                {/* Arrow: окремий клікабельний елемент для розгортання */}
+                
                 {category.children && category.children.length > 0 ? (
                     <button
                         onClick={(e) => { e.stopPropagation(); setExpanded(prev => !prev); }}
@@ -51,14 +44,12 @@ const CategoryNode = ({ category, onFilterChange, onParentFilterChange, activeCa
                     <span className="w-5 mr-2" />
                 )}
 
-                {/* Назва категорії: клік перемикає фільтр; якщо є дочірні елементи — також перемикає розгортання */}
+                
                 <div
                     onClick={() => {
                         if (category.children && category.children.length > 0) {
-                            // Для батьківської категорії: тільки розгортаємо, не додаємо в фільтри
                             setExpanded(prev => !prev);
                         } else {
-                            // Для листової категорії: звичайний toggle
                             onFilterChange(category.id);
                         }
                     }}
@@ -80,7 +71,7 @@ const CategoryNode = ({ category, onFilterChange, onParentFilterChange, activeCa
                 </div>
             </div>
 
-            {/* Рекурсивний виклик для дочірніх елементів (показуємо тільки коли розгорнуто) */}
+            
             {category.children && category.children.length > 0 && expanded && (
                 <ul className="pl-0 border-l border-gray-200">
                     {category.children.map(child => (
@@ -99,7 +90,6 @@ const CategoryNode = ({ category, onFilterChange, onParentFilterChange, activeCa
     );
 };
 
-// Головний компонент фільтра категорій
 const HierarchicalCategoryFilter = ({ categories, onFilterChange, onParentFilterChange, activeCategoryIds }) => {
     const ids = activeCategoryIds || [];
     

@@ -43,7 +43,7 @@ const processQueue = (error, token = null) => {
 export const queryFetcher = async ({ queryKey, signal }) => {
     const [endpoint, options = {}] = queryKey; 
     
-    // Публічні endpoints, які не потребують авторизації
+    
     const publicEndpoints = ['/auth/login', '/auth/register', '/auth/refresh'];
     const isPublicEndpoint = publicEndpoints.some(ep => endpoint.includes(ep));
     
@@ -80,7 +80,6 @@ export const queryFetcher = async ({ queryKey, signal }) => {
 
         } catch (refreshError) {
             processQueue(refreshError);
-            // Якщо не вдалося оновити токен, вилогінюємо користувача
             store.dispatch(logout());
             throw new Error(refreshError.message); 
         } finally {

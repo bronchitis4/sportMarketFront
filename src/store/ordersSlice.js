@@ -43,7 +43,6 @@ const ordersSlice = createSlice({
             })
             .addCase(fetchOrderHistory.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                // Server returns array of orders or object with items property
                 state.orders = Array.isArray(action.payload) ? action.payload : (action.payload.orders || action.payload.items || []);
             })
             .addCase(fetchOrderHistory.rejected, (state, action) => {
@@ -56,7 +55,6 @@ const ordersSlice = createSlice({
             })
             .addCase(cancelOrder.fulfilled, (state, action) => {
                 state.cancelStatus = 'succeeded';
-                // Find and update the cancelled order
                 const cancelledId = action.meta.arg;
                 const idx = state.orders.findIndex(o => o.id === cancelledId);
                 if (idx !== -1) {

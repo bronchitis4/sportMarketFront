@@ -46,10 +46,8 @@ export default function ProductPage() {
         );
     }
     
-    // --- Допоміжні функції ---
     const formatPrice = (price) => `${parseFloat(price).toFixed(2).replace('.', ',')} ₴`;
 
-    // Функція для додавання в кошик
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
             navigate('/login');
@@ -68,7 +66,6 @@ export default function ProductPage() {
             setCartMessage('✓ Товар успішно додано в кошик!');
             setQuantity(1);
             
-            // Автоматично приховати повідомлення через 3 секунди
             setTimeout(() => setCartMessage(''), 3000);
         } catch (error) {
             setCartMessage('✗ Помилка при додаванні в кошик. Спробуйте ще раз.');
@@ -78,7 +75,6 @@ export default function ProductPage() {
         }
     };
 
-    // --- Основний рендеринг товару ---
     const {
         name, description, price, old_price, images, brand_id, category, brand
     } = product;

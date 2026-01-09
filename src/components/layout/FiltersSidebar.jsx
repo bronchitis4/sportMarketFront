@@ -13,7 +13,6 @@ import {
 const FilterSidebar = React.memo(() => {
     const dispatch = useDispatch();
     
-    // Отримуємо стан з Redux Store
     const { activeFilters, availableFilters } = useSelector(state => state.filter); 
     const { categories, brands } = availableFilters; 
     const { category_ids, brand_ids, isOnSale, priceMin, priceMax } = activeFilters; 
@@ -45,14 +44,11 @@ const FilterSidebar = React.memo(() => {
         [category_ids.length, activeBrands.length, isOnSale, priceMin, priceMax]
     ); 
 
-    // Обробники, які викликають Redux Actions
     const handleSetCategory = useCallback((id) => {
-        // Reducer сам обробляє логіку додавання/видалення ID з масиву
         dispatch(setCategoryFilter(id));
     }, [dispatch]);
 
     const handleSetParentCategory = useCallback((id) => {
-        // Для батьківських категорій: очищуємо всі й встановлюємо тільки цю
         dispatch(setCategoryFilterExclusive(id));
     }, [dispatch]);
 
@@ -163,9 +159,9 @@ const FilterSidebar = React.memo(() => {
 
             {/* 1. Фільтр Категорій (Тепер ієрархічний) */}
             <HierarchicalCategoryFilter
-                categories={categories} // Ієрархічний масив
-                onFilterChange={handleSetCategory} // Функція для листових категорій
-                onParentFilterChange={handleSetParentCategory} // Функція для батьківських категорій
+                categories={categories}
+                onFilterChange={handleSetCategory}
+                onParentFilterChange={handleSetParentCategory}
                 activeCategoryIds={category_ids}
             />
             

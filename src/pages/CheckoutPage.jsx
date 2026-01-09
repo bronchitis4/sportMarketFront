@@ -27,7 +27,6 @@ export default function CheckoutPage() {
     }, [shippingMethods]);
 
     useEffect(() => {
-        // Якщо вибрано "самовивіз", завантажуємо магазини
         const selectedMethodObj = shippingMethods.find(m => m.id === selectedMethod);
         if (selectedMethodObj && selectedMethodObj.name && selectedMethodObj.name.toLowerCase().includes('самовивіз')) {
             dispatch(fetchStores());
@@ -38,7 +37,6 @@ export default function CheckoutPage() {
         const methodObj = shippingMethods.find(m => m.id === selectedMethod) || {};
         const shippingCost = parseFloat(methodObj.cost || 0);
         
-        // Перевіряємо чи вибрано магазин для самовивізу
         const isPickupMethod = methodObj.name?.toLowerCase().includes('самовивіз');
         if (isPickupMethod && !selectedStore) {
             alert('Будь ласка, виберіть магазин для самовивізу');
@@ -48,7 +46,6 @@ export default function CheckoutPage() {
         setIsSubmitting(true);
         
         try {
-            // 1. Спочатку створюємо замовлення
             const confirmPayload = {
                 shipping_address_id: isPickupMethod ? parseInt(selectedStore, 10) : (parseInt(shippingAddressId, 10) || 0),
                 shipping_method_id: selectedMethod,
@@ -63,7 +60,6 @@ export default function CheckoutPage() {
                 const orderId = orderResult.payload?.order.id;
                 
                 if (orderId) {
-                    // 2. Створюємо інформацію про доставку
                     const shippingInfoPayload = {
                         order_id: orderId,
                         shipping_method_id: selectedMethod,

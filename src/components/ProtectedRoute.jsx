@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 export default function ProtectedRoute({ children }) {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     
-    // Додаткова перевірка в localStorage на випадок якщо Redux ще не оновився
     const hasToken = localStorage.getItem('accessToken');
     
     console.log('ProtectedRoute check:', { isAuthenticated, hasToken: !!hasToken });

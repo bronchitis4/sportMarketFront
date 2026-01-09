@@ -34,7 +34,7 @@ const ProductCard = ({
             return;
         }
         
-        if (isLoading) return; // Запобігаємо множним кликам
+        if (isLoading) return;
         
         setIsLoading(true);
         try {
@@ -42,7 +42,6 @@ const ProductCard = ({
                 await dispatch(removeFromWishList(id)).unwrap();
             } else {
                 await dispatch(addToWishList(id)).unwrap();
-                // Перез-завантажуємо wish list щоб отримати повні дані продукту
                 await dispatch(fetchWishList()).unwrap();
             }
         } catch (error) {
@@ -69,7 +68,6 @@ const ProductCard = ({
                 product_id: id, 
                 quantity: 1 
             })).unwrap();
-            // Навігуємо на сторінку товара для подробных
             navigate(`/product/${id}`);
         } catch (error) {
             console.error('Cart error:', error);

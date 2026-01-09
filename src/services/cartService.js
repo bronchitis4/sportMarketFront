@@ -1,5 +1,3 @@
-// src/services/cartService.js
-
 import { queryFetcher } from '../api/queryFetcher';
 
 export const cartService = {
