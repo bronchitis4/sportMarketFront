@@ -1,41 +1,45 @@
 const API_BASE_URL = 'https://sportmarketback.onrender.com';
 
 export const refreshAccessToken = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    
-    if (!refreshToken) {
-        throw new Error('No refresh token available');
-    }
-
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refreshToken }),
+        credentials: 'include', // Відправляє cookies з refresh token
     });
 
     if (!response.ok) {
+        // Якщо refresh токен невалідний, очищаємо localStorage
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('role');
         throw new Error('Failed to refresh token. Session expired.');
     }
 
     const data = await response.json();
     
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
+    // Сервер може повертати acessToken (з помилкою) замість accessToken
+    const newAccessToken = data.acessToken || data.accessToken;
+    const newRefreshToken = data.refreshToken;
     
-    return data.accessToken;
+    if (newAccessToken) {
+        localStorage.setItem('accessToken', newAccessToken);
+    }
+    if (newRefreshToken) {
+        localStorage.setItem('refreshToken', newRefreshToken);
+    }
+    
+    return newAccessToken;
 };
 
 export const logoutUser = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    
     const response = await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refreshToken }),
+        credentials: 'include', // Відправляє cookies з refresh token
     });
 
     if (!response.ok) {

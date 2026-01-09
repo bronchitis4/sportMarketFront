@@ -45,13 +45,12 @@ const LoginForm = () => {
         try {
             const result = await queryFetcher({ queryKey });
             
+            // refreshToken автоматично в cookie, не приходить у відповіді
             localStorage.setItem('accessToken', result.accessToken);
-            localStorage.setItem('refreshToken', result.refreshToken);
             localStorage.setItem('role', result.role);
 
             dispatch(setCredentials({ 
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
                 role: result.role
             }));
 

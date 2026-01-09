@@ -2,7 +2,6 @@ import { queryFetcher } from '../api/queryFetcher';
 
 export const adminService = {
     createProduct: async (formData) => {
-        // FormData з файлами потрібно відправляти через звичайний fetch
         const token = localStorage.getItem('accessToken');
         console.log('Creating product with token');
         console.log('Sending to: https://sportmarketback.onrender.com/products');
@@ -12,7 +11,6 @@ export const adminService = {
             body: formData,
             headers: {
                 'Authorization': `Bearer ${token}`,
-                // Don't set Content-Type, browser will set it with boundary for multipart/form-data
             },
         });
 
@@ -42,7 +40,6 @@ export const adminService = {
         return res;
     },
 
-    // Users Management
     getUsers: async () => {
         const res = await queryFetcher({ 
             queryKey: ['/users/', { 
@@ -72,7 +69,6 @@ export const adminService = {
         return res;
     },
 
-    // Orders Management
     getAllOrders: async () => {
         const res = await queryFetcher({ 
             queryKey: ['/orders/all', { 
@@ -92,7 +88,6 @@ export const adminService = {
         return res;
     },
 
-    // Products Management
     getProducts: async () => {
         const res = await queryFetcher({ 
             queryKey: ['/products', { 

@@ -1,5 +1,6 @@
 import { store } from '../store/store'; 
-import { refreshAccessToken } from '../services/authService'; 
+import { refreshAccessToken } from '../services/authService';
+import { logout } from '../store/authSlice'; 
 
 const API_BASE_URL = 'https://sportmarketback.onrender.com'; 
 
@@ -41,11 +42,16 @@ const processQueue = (error, token = null) => {
 
 export const queryFetcher = async ({ queryKey, signal }) => {
     const [endpoint, options = {}] = queryKey; 
-    let token = getAccessToken();
+    
+    // Публічні endpoints, які не потребують авторизації
+    const publicEndpoints = ['/auth/login', '/auth/register', '/auth/refresh'];
+    const isPublicEndpoint = publicEndpoints.some(ep => endpoint.includes(ep));
+    
+    let token = isPublicEndpoint ? null : getAccessToken();
 
     let response = await performFetch(endpoint, options, token);
 
-    if (response.status === 401) {
+    if (response.status === 401 && !isPublicEndpoint) {
         if (isRefreshing) {
             return new Promise((resolve, reject) => {
                 failedQueue.push({ resolve, reject });
@@ -74,6 +80,8 @@ export const queryFetcher = async ({ queryKey, signal }) => {
 
         } catch (refreshError) {
             processQueue(refreshError);
+            // Якщо не вдалося оновити токен, вилогінюємо користувача
+            store.dispatch(logout());
             throw new Error(refreshError.message); 
         } finally {
             isRefreshing = false;

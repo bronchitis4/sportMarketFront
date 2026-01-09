@@ -49,14 +49,13 @@ const RegistrationBlock = () => {
         try {
             const result = await queryFetcher({ queryKey });
             
-            localStorage.setItem('accessToken', result.accessToken);
-            localStorage.setItem('refreshToken', result.refreshToken);
-            localStorage.setItem('role', result.role);
+            // refreshToken автоматично в cookie, не приходить у відповіді
+            // При registration приходить тільки acessToken, без role
+            localStorage.setItem('accessToken', result.acessToken);
             
             dispatch(setCredentials({ 
-                accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
-                role: result.role
+                accessToken: result.acessToken,
+                role: 'USER' // За замовчуванням USER після реєстрації
             }));
 
             setSuccess(true);

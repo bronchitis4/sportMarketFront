@@ -34,28 +34,36 @@ function AppContent() {
   const dispatch = useDispatch();
   const filterStatus = useSelector(state => state.filter.status);
   
+  // Синхронізуємо auth з localStorage ОДРАЗУ при завантаженні
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const role = localStorage.getItem('role');
+    
+    if (accessToken) {
+      console.log('Restoring auth from localStorage:', { accessToken: accessToken.substring(0, 20) + '...', role });
+      dispatch(setCredentials({ 
+        accessToken, 
+        role
+      }));
+    }
+  }, [dispatch]);
+  
+  // Завантажуємо категорії і бренди
   useEffect(() => {
     if (filterStatus === 'idle') {
       dispatch(fetchCategories());
       dispatch(fetchBrands());
     }
-    // Завантажуємо wish list при запуску додатку
-    dispatch(fetchWishList());
-    // Завантажуємо кошик при запуску додатку
-    dispatch(fetchCart());
-    
-    // Синхронізуємо auth з localStorage
-    const accessToken = localStorage.getItem('accessToken');
-    const userStr = localStorage.getItem('user');
-    if (accessToken && userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        dispatch(setCredentials({ accessToken, user }));
-      } catch (error) {
-        console.error('Failed to parse user from localStorage:', error);
-      }
-    }
   }, [dispatch, filterStatus]);
+  
+  // Завантажуємо wish list і кошик для авторизованих
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      dispatch(fetchWishList());
+      dispatch(fetchCart());
+    }
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen">
