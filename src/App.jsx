@@ -33,6 +33,7 @@ function AppContent() {
   const location = useLocation();
   const dispatch = useDispatch();
   const filterStatus = useSelector(state => state.filter.status);
+  const filterError = useSelector(state => state.filter.error);
   
   
   useEffect(() => {
@@ -67,40 +68,66 @@ function AppContent() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="grow">
-        <Routes>
-          <Route path='/' element={<MainPage />} />
-          <Route path='/catalog' element={
-            <div className='flex'>
-              <FilterSidebar />
-              <ProductList />
+      {/* If categories failed to load, show a full-page technical error banner */}
+      {filterStatus === 'failed' ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white p-6">
+          <div className="max-w-2xl w-full text-center">
+            <h1 className="text-3xl font-extrabold text-red-600 mb-4">Технічні неполадки</h1>
+            <p className="text-gray-700 mb-6">Не вдалося завантажити категорії. Адміністрація про це повідомлена.</p>
+            {filterError && <pre className="text-xs text-gray-500 mb-4 whitespace-pre-wrap">{String(filterError)}</pre>}
+            <div className="flex items-center justify-center gap-4">
+              <button
+                onClick={() => { dispatch(fetchCategories()); dispatch(fetchBrands()); }}
+                className="px-5 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Спробувати ще раз
+              </button>
+              <button
+                onClick={() => { window.location.href = '/'; }}
+                className="px-5 py-3 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+              >
+                На головну
+              </button>
             </div>
-          } />
-          <Route path='/wish-list' element={<ProtectedRoute><WishListPage /></ProtectedRoute>} />
-          <Route path='/cart' element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
-          <Route path='/checkout' element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
-          <Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path='/admin' element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
-          <Route path='/registration' element={
-            <RegistrationBlock />
-          } />
-          <Route path='/login' element={
-            <LoginForm />
-          } />
-          <Route path='/brands' element={
-            <BrandsPage />
-          } />
-          <Route path='/sales' element={
-            <SalesPage />
-          } />
-          <Route path='/product/:productId' element={
-            <ProductPage />
-          } />
-        </Routes>
-      </main>
-
-      {location.pathname !== '/admin' && <Footer />}
+          </div>
+        </div>
+      ) : (
+        <>
+          <Header />
+          <main className="grow">
+            <Routes>
+              <Route path='/' element={<MainPage />} />
+              <Route path='/catalog' element={
+                <div className='flex'>
+                  <FilterSidebar />
+                  <ProductList />
+                </div>
+              } />
+              <Route path='/wish-list' element={<ProtectedRoute><WishListPage /></ProtectedRoute>} />
+              <Route path='/cart' element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+              <Route path='/checkout' element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+              <Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+              <Route path='/admin' element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+              <Route path='/registration' element={
+                <RegistrationBlock />
+              } />
+              <Route path='/login' element={
+                <LoginForm />
+              } />
+              <Route path='/brands' element={
+                <BrandsPage />
+              } />
+              <Route path='/sales' element={
+                <SalesPage />
+              } />
+              <Route path='/product/:productId' element={
+                <ProductPage />
+              } />
+            </Routes>
+          </main>
+          {location.pathname !== '/admin' && <Footer />}
+        </>
+      )}
     </div>
   );
 }

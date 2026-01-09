@@ -14,9 +14,6 @@ export default function CartPage() {
     }, [dispatch]);
 
 
-
-
-
     if (fetchStatus === 'loading') {
         return (
             <div className="text-center mt-20 p-8">

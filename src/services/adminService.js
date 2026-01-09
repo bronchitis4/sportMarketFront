@@ -1,12 +1,14 @@
 import { queryFetcher } from '../api/queryFetcher';
 
+const API_BASE_URL = 'https://sportmarketback.onrender.com';
+
 export const adminService = {
     createProduct: async (formData) => {
         const token = localStorage.getItem('accessToken');
         console.log('Creating product with token');
-        console.log('Sending to: https://sportmarketback.onrender.com/products');
+        console.log(`Sending to: ${API_BASE_URL}/products`);
         
-        const res = await fetch('https://sportmarketback.onrender.com/products', {
+        const res = await fetch(`${API_BASE_URL}/products`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -109,7 +111,7 @@ export const adminService = {
 
     updateProduct: async (productId, formData) => {
         const token = localStorage.getItem('accessToken');
-        const res = await fetch(`https://sportmarketback.onrender.com/products/${productId}`, {
+        const res = await fetch(`${API_BASE_URL}/products/${productId}`, {
             method: 'PUT',
             body: formData,
             headers: {
